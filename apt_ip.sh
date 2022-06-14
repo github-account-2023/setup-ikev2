@@ -16,7 +16,8 @@ ip=$(get_ipv4)
 interface=$(ip route show default | awk '{print $5}')
 [ -z "${interface}" ] && echo -e "[${red}Error${color}] Unable to get the interface!" && exit 3
 
-apt update && apt install strongswan strongswan-pki libcharon-extra-plugins libstrongswan-extra-plugins libtss2-tcti-tabrmd0 -y
+apt update && apt install strongswan strongswan-pki -y
+apt install libtss2-tcti-tabrmd0 -y
 mkdir -p ~/pki/{cacerts,certs,private} && chmod 700 ~/pki
 pki --gen --type rsa --size 4096 --outform pem > ~/pki/private/ca-key.pem
 pki --self --ca --lifetime 3650 --in ~/pki/private/ca-key.pem --type rsa --dn "CN=$ip" --outform pem > ~/pki/cacerts/ca-cert.pem
