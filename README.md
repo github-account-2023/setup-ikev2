@@ -2,7 +2,7 @@
 
 ### For Ubuntu and Debian
 ```shell
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/Hailey2022/setup-ikev2/main/ikev2_ip.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Hailey2022/setup-ikev2/main/apt_ip.sh)"
 ```
 
 ### Credits
