@@ -90,7 +90,7 @@ ip6tables -t nat -A POSTROUTING -s fd01:2345:6789:10::/64 -o $interface -j MASQU
 echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
 apt install iptables-persistent -y
-clear
+# clear
 
 echo -e "======================================================"
 echo -e "Download the pem: ${green}cat /etc/ipsec.d/cacerts/ca-cert.pem${color}"
