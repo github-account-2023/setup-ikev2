@@ -16,7 +16,7 @@ ip=$(get_ipv4)
 interface=$(ip route show default | awk '{print $5}')
 [ -z "${interface}" ] && echo -e "[${red}Error${color}] Unable to get the interface!" && exit 3
 
-apt update && apt install strongswan strongswan-pki libcharon-extra-plugins libcharon-extauth-plugins libstrongswan-extra-plugins libtss2-tcti-tabrmd0 -y
+apt update && apt install strongswan strongswan-pki libcharon-extra-plugins libstrongswan-extra-plugins libtss2-tcti-tabrmd0 -y
 mkdir -p ~/pki/{cacerts,certs,private} && chmod 700 ~/pki
 pki --gen --type rsa --size 4096 --outform pem > ~/pki/private/ca-key.pem
 pki --self --ca --lifetime 3650 --in ~/pki/private/ca-key.pem --type rsa --dn "CN=$ip" --outform pem > ~/pki/cacerts/ca-cert.pem
@@ -90,7 +90,7 @@ ip6tables -t nat -A POSTROUTING -s fd01:2345:6789:10::/64 -o $interface -j MASQU
 echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
 apt install iptables-persistent -y
-# clear
+cat /etc/ipsec.d/cacerts/ca-cert.pem
 
 echo -e "======================================================"
 echo -e "Download the pem: ${green}cat /etc/ipsec.d/cacerts/ca-cert.pem${color}"
