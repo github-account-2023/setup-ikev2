@@ -21,6 +21,7 @@ apt install libtss2-tcti-tabrmd0 -y
 mkdir -p ~/pki/{cacerts,certs,private} && chmod 700 ~/pki
 pki --gen --type rsa --size 4096 --outform pem > ~/pki/private/ca-key.pem
 pki --self --ca --lifetime 3650 --in ~/pki/private/ca-key.pem --type rsa --dn "CN=$ip" --outform pem > ~/pki/cacerts/ca-cert.pem
+pki --gen --type rsa --size 4096 --outform pem > ~/pki/private/server-key.pem
 pki --pub --in ~/pki/private/server-key.pem --type rsa \
     | pki --issue --lifetime 1825 \
         --cacert ~/pki/cacerts/ca-cert.pem \
