@@ -1,11 +1,11 @@
 # Setup ikev2
 
-### For Ubuntu and Debian with IP
+### For Ubuntu or Debian with ip
 ```shell
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/Hailey2022/setup-ikev2/main/apt_ip.sh)"
 ```
 
-### For Ubuntu and Debian with domain
+### For Ubuntu or Debian with domain
 ```shell
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/Hailey2022/setup-ikev2/main/apt_domain.sh)"
 ```
