@@ -13,7 +13,8 @@ color='\033[0m'
 [ $EUID -ne 0 ] && echo -e "[${red}Error${color}] This script must be run as root!" && exit 1
 ip=$(get_ipv4)
 domain=$1
-[ -z $domain ] && domain="$ip.xip.io"
+[ -z "${ip}" ] && echo -e "[${red}Error${color}] Unable to get server ipv4!" && exit 2
+[ -z $domain ] && domain="$ip.nip.io"
 echo $domain
 
 interface=$(ip route show default | awk '{print $5}')
@@ -22,7 +23,15 @@ interface=$(ip route show default | awk '{print $5}')
 apt update && apt install strongswan -y
 apt install libtss2-tcti-tabrmd0 -y
 
-#TODO: certbot
+#TODO: certbot renew hook
+apt install snapd
+snap install core
+snap refresh core
+snap install --classic certbot
+ln -s /snap/bin/certbot /usr/bin/certbot
+yes | certbot certonly --register-unsafely-without-email --standalone -d $domain
+ln -s /etc/letsencrypt/live/$domain/fullchain.pem /etc/ipsec.d/certs/server-cert.pem
+ln -s /etc/letsencrypt/live/$domain/privkey.pem /etc/ipsec.d/private/server-key.pem
 
 cat > /etc/ipsec.conf<<-EOF
 config setup
@@ -90,5 +99,5 @@ echo -e "======================================================"
 echo -e "Download the pem: ${green}cat /etc/ipsec.d/cacerts/ca-cert.pem${color}"
 echo -e "Configure the credential: ${green}vim /etc/ipsec.secrets${color}"
 echo -e "And run: ${green}systemctl restart strongswan-starter${color}"
-echo -e "domain: ${green}${domain}${color}"
+echo -e "Domain: ${green}${domain}${color}"
 echo -e "======================================================"
