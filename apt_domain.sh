@@ -31,7 +31,7 @@ snap install core
 snap refresh core
 snap install --classic certbot
 ln -sb /snap/bin/certbot /usr/bin/certbot
-certbot certonly --non-interactive --agree-tos --preferred-challenges --register-unsafely-without-email --standalone -d $domain
+certbot certonly --non-interactive --agree-tos --preferred-challenges http --register-unsafely-without-email --standalone -d $domain
 ln -f -s /etc/letsencrypt/live/$domain/cert.pem    /etc/ipsec.d/certs/server-cert.pem
 ln -f -s /etc/letsencrypt/live/$domain/privkey.pem /etc/ipsec.d/private/server-key.pem
 ln -f -s /etc/letsencrypt/live/$domain/chain.pem   /etc/ipsec.d/cacerts/chain.pem
