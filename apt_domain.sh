@@ -11,6 +11,7 @@ green='\033[0;32m'
 color='\033[0m'
 
 [ $EUID -ne 0 ] && echo -e "[${red}Error${color}] This script must be run as root!" && exit 1
+ufw disable
 ip=$(get_ipv4)
 domain=$1
 [ -z "${ip}" ] && echo -e "[${red}Error${color}] Unable to get server ipv4!" && exit 2
@@ -24,14 +25,14 @@ apt update && apt install strongswan -y
 apt install libtss2-tcti-tabrmd0 -y
 
 #TODO: certbot renew hook
-apt install snapd
+apt install snapd -y
 snap install core
 snap refresh core
 snap install --classic certbot
-ln -s /snap/bin/certbot /usr/bin/certbot
+ln -sb /snap/bin/certbot /usr/bin/certbot
 yes | certbot certonly --register-unsafely-without-email --standalone -d $domain
-ln -s /etc/letsencrypt/live/$domain/fullchain.pem /etc/ipsec.d/certs/server-cert.pem
-ln -s /etc/letsencrypt/live/$domain/privkey.pem /etc/ipsec.d/private/server-key.pem
+ln -sb /etc/letsencrypt/live/$domain/fullchain.pem /etc/ipsec.d/certs/server-cert.pem
+ln -sb /etc/letsencrypt/live/$domain/privkey.pem /etc/ipsec.d/private/server-key.pem
 
 cat > /etc/ipsec.conf<<-EOF
 config setup
