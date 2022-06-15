@@ -30,9 +30,15 @@ snap install core
 snap refresh core
 snap install --classic certbot
 ln -sb /snap/bin/certbot /usr/bin/certbot
-yes | certbot certonly --register-unsafely-without-email --standalone -d $domain
-cp `readlink -f /etc/letsencrypt/live/$domain/fullchain.pem` /etc/ipsec.d/certs/server-cert.pem
-cp `readlink -f /etc/letsencrypt/live/$domain/privkey.pem` /etc/ipsec.d/private/server-key.pem
+certbot certonly --non-interactive --agree-tos --preferred-challenges --register-unsafely-without-email --standalone -d $domain
+ln -f -s /etc/letsencrypt/live/$domain/cert.pem    /etc/ipsec.d/certs/server-cert.pem
+ln -f -s /etc/letsencrypt/live/$domain/privkey.pem /etc/ipsec.d/private/server-key.pem
+ln -f -s /etc/letsencrypt/live/$domain/chain.pem   /etc/ipsec.d/cacerts/chain.pem
+
+echo "/etc/letsencrypt/archive/$domain/* r,
+" >> /etc/apparmor.d/local/usr.lib.ipsec.charon
+
+aa-status --enabled && invoke-rc.d apparmor reload
 
 cat > /etc/ipsec.conf<<-EOF
 config setup
@@ -98,6 +104,6 @@ apt install iptables-persistent -y
 
 echo -e "======================================================"
 echo -e "Configure the credential: ${green}vim /etc/ipsec.secrets${color}"
-echo -e "And run: ${green}systemctl restart strongswan-starter${color}"
+echo -e "And then run: ${green}ipsec rereadsecrets${color}"
 echo -e "Domain: ${green}${domain}${color}"
 echo -e "======================================================"
