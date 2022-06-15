@@ -97,6 +97,6 @@ cat /etc/ipsec.d/cacerts/ca-cert.pem
 echo -e "======================================================"
 echo -e "Download the pem: ${green}cat /etc/ipsec.d/cacerts/ca-cert.pem${color}"
 echo -e "Configure the credential: ${green}vim /etc/ipsec.secrets${color}"
-echo -e "And run: ${green}systemctl restart strongswan-starter${color}"
+echo -e "And then run: ${green}ipsec rereadsecrets${color}"
 echo -e "ip: ${green}${ip}${color}"
 echo -e "======================================================"
