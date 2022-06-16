@@ -13,11 +13,13 @@ color='\033[0m'
 [ $EUID -ne 0 ] && echo -e "[${red}Error${color}] This script must be run as root!" && exit 1
 ufw disable
 ip=$(get_ipv4)
-# TODO: bug!
 domain=$1
 [ -z "${ip}" ] && echo -e "[${red}Error${color}] Unable to get server ipv4!" && exit 2
-[ -z $domain ] && domain="$ip.nip.io"
-echo $domain
+if [ "$domain" == "my_domain.com" ]; then
+    domain="$ip.nip.io"
+else
+    [ -z $domain ] && domain="$ip.nip.io"
+fi
 
 interface=$(ip route show default | awk '{print $5}')
 [ -z "${interface}" ] && echo -e "[${red}Error${color}] Unable to get the interface!" && exit 3
