@@ -34,7 +34,7 @@ apt install libtss2-tcti-tabrmd0 -y
 # snap install --classic certbot
 # ln -sb /snap/bin/certbot /usr/bin/certbot
 
-apt install certbot
+apt install certbot -y
 
 mkdir -p /etc/letsencrypt
 echo 'rsa-key-size = 4096
