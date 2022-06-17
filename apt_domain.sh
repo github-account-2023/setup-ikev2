@@ -25,6 +25,9 @@ interface=$(ip route show default | awk '{print $5}')
 [ -z "${interface}" ] && echo -e "[${red}Error${color}] Unable to get the interface!" && exit 3
 
 apt update && apt install strongswan -y
+apt install libcharon-extra-plugins -y
+apt install libcharon-extauth-plugins -y
+apt install libstrongswan-extra-plugins -y
 apt install libtss2-tcti-tabrmd0 -y
 
 # just use old version
