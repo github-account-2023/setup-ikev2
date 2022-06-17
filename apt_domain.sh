@@ -70,7 +70,7 @@ conn ikev2-vpn
     dpddelay=300s
     rekey=no
     left=%any
-    leftid=$domain
+    leftid=@$domain
     leftcert=server-cert.pem
     leftsendcert=always
     leftsubnet=0.0.0.0/0,::/0
