@@ -7,7 +7,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/Hailey2022/setup-ikev2/m
 
 ### For Ubuntu or Debian with domain
 ```shell
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/Hailey2022/setup-ikev2/main/apt_domain.sh)"
+bash <(curl -fsSL https://raw.githubusercontent.com/Hailey2022/setup-ikev2/main/apt_domain.sh)
 ```
 
 ### For Ubuntu or Debian with custom domain
