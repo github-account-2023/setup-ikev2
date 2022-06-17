@@ -27,13 +27,24 @@ interface=$(ip route show default | awk '{print $5}')
 apt update && apt install strongswan -y
 apt install libtss2-tcti-tabrmd0 -y
 
-#TODO: certbot renew hook
-apt install snapd -y
-snap install core
-snap refresh core
-snap install --classic certbot
-ln -sb /snap/bin/certbot /usr/bin/certbot
+# just use old version
+# apt install snapd -y
+# snap install core
+# snap refresh core
+# snap install --classic certbot
+# ln -sb /snap/bin/certbot /usr/bin/certbot
+
+apt install certbot
+
+mkdir -p /etc/letsencrypt
+echo 'rsa-key-size = 4096
+pre-hook = /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+post-hook = /sbin/iptables -D INPUT -p tcp --dport 80 -j ACCEPT
+renew-hook = /usr/sbin/ipsec reload && /usr/sbin/ipsec secrets
+' > /etc/letsencrypt/cli.ini
+
 certbot certonly --non-interactive --agree-tos --preferred-challenges http --register-unsafely-without-email --standalone -d $domain
+
 ln -f -s /etc/letsencrypt/live/$domain/cert.pem    /etc/ipsec.d/certs/server-cert.pem
 ln -f -s /etc/letsencrypt/live/$domain/privkey.pem /etc/ipsec.d/private/server-key.pem
 ln -f -s /etc/letsencrypt/live/$domain/chain.pem   /etc/ipsec.d/cacerts/chain.pem
@@ -75,7 +86,7 @@ conn ikev2-vpn
 EOF
 
 cat > /etc/ipsec.secrets<<-EOF
-: RSA "server-key.pem"
+$domain : RSA "server-key.pem"
 username : EAP "password"
 EOF
 
@@ -107,6 +118,6 @@ apt install iptables-persistent -y
 
 echo -e "======================================================"
 echo -e "Configure the credential: ${green}vim /etc/ipsec.secrets${color}"
-echo -e "And then run: ${green}ipsec rereadsecrets${color}"
+echo -e "And then run: ${green}ipsec secrets${color}"
 echo -e "Domain: ${green}${domain}${color}"
 echo -e "======================================================"
